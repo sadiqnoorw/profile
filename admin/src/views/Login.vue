@@ -10,8 +10,9 @@
                         </span>
                         </div>
                         <!-- Form -->
-                        <form class="form-horizontal mt-3" id="loginform">
-                            <div class="row pb-4">
+                        <form class="form-horizontal mt-3" @submit.prevent="login" id="loginform">
+                            <div class="row pb-6">
+                                <Error v-if="error" :error="error"></Error>
                                 <div class="col-12">
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
@@ -22,10 +23,10 @@
                                         <input
                                             type="text"
                                             class="form-control form-control-lg"
-                                            placeholder="Username"
-                                            aria-label="Username"
+                                            placeholder="email"
+                                            aria-label="email"
+                                            v-model="email"
                                             aria-describedby="basic-addon1"
-                                            required=""
                                         />
                                     </div>
                                     <div class="input-group mb-3">
@@ -35,12 +36,12 @@
                                             </span>
                                         </div>
                                         <input
-                                        type="text"
+                                        type="password"
                                         class="form-control form-control-lg"
                                         placeholder="Password"
                                         aria-label="Password"
+                                        v-model="password"
                                         aria-describedby="basic-addon1"
-                                        required=""
                                         />
                                     </div>
                                 </div>
@@ -64,7 +65,40 @@
     </div>
 </template>
 <script>
-export default {};
+
+import Service from '@/services/Service.js'
+import Error from '@/components/Error.vue';
+export default {
+    name: 'login',
+    components: {
+        Error
+    },
+    data() {
+    return {
+        email: '',
+        password: '',
+        error: ''
+    }
+    },
+    methods: {
+        async login() {
+                 await Service.login({
+                    email: this.email,
+                    password: this.password,
+                }).then((loggedInUser) => {
+                    localStorage.setItem('token', loggedInUser.data.token)
+                    this.$store.dispatch('user', loggedInUser)
+                    this.$router.push('/dashboard')
+                    this.error = loggedInUser.data.message
+                    this.error = 'Invalid username/password '
+                }).catch((error) => {
+                    if (error.response.status == 401){
+                        this.error = error.response.data.message
+                    }
+                });
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped></style>

@@ -12,6 +12,9 @@
                     <!-- Form -->
                     <form @submit.prevent="registration" class="form-horizontal mt-3" action="index.html">
                         <div class="row pb-4">
+                            <div v-if="errors">
+                                <Error v-for="(error,  index) in errors" :key="index"  :error="error[0]"></Error>
+                            </div>
                             <div class="col-12">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -64,23 +67,28 @@
 
 <script>
     import Service from '@/services/Service.js'
+    import Error from '@/components/Error.vue';
 
     export default {
         name: 'Register',
+        components: {
+            Error
+        },
         data() {
             return {
                 first_name : '',
                 last_name: '',
                 email: '',
                 password: '',
-                confirm_password: ''
+                confirm_password: '',
+                errors: ''
             }
         },
 
         methods: {
             async registration() {
-
-                Service.postRegistion({
+                
+                await  Service.postRegistion({
                     first_name : this.first_name,
                     last_name: this.last_name,
                     email: this.email,
@@ -88,14 +96,17 @@
                     password_confirm: this.confirm_password
                 })
                 .then( response => {
-                    console.log(response)
-                    this.$router.push('/login')
-                }
-                ).catch(
-                    error => {
-                        console.log(error)
+                    this.errors = response.data
+                    console.log('response')
+                    this.$router.push('/')
+                }).catch( error => {
+                    console.log(error.response.data, 'yues')
+                  //  this.errors = response
+                    if (error.response.status == 422){
+                        this.errors = error.response.data
                     }
-                )
+                
+                })
             }
         }
     }
