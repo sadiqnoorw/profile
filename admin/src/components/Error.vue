@@ -1,7 +1,7 @@
 <template>
-<div class="alert alert-danger" role="alert">
-    {{ error }}
-</div>
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
 </template>
 
 <script >
@@ -10,10 +10,5 @@
     export default Vue.extend({
         name: 'Error',
         props:['error']
-        
     })
 </script>
-
-<style scoped>
-
-</style>

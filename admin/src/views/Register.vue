@@ -87,7 +87,6 @@
 
         methods: {
             async registration() {
-                
                 await  Service.postRegistion({
                     first_name : this.first_name,
                     last_name: this.last_name,
@@ -101,7 +100,7 @@
                     this.$router.push('/')
                 }).catch( error => {
                     console.log(error.response.data, 'yues')
-                  //  this.errors = response
+
                     if (error.response.status == 422){
                         this.errors = error.response.data
                     }
@@ -111,7 +110,3 @@
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

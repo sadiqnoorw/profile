@@ -74,31 +74,29 @@ export default {
         Error
     },
     data() {
-    return {
-        email: '',
-        password: '',
-        error: ''
-    }
+        return {
+            email: '',
+            password: '',
+            error: ''
+        }
     },
     methods: {
         async login() {
-                 await Service.login({
-                    email: this.email,
-                    password: this.password,
-                }).then((loggedInUser) => {
-                    localStorage.setItem('token', loggedInUser.data.token)
-                    this.$store.dispatch('user', loggedInUser)
-                    this.$router.push('/dashboard')
-                    this.error = loggedInUser.data.message
-                    this.error = 'Invalid username/password '
-                }).catch((error) => {
-                    if (error.response.status == 401){
-                        this.error = error.response.data.message
-                    }
-                });
+            await Service.login({
+                email: this.email,
+                password: this.password,
+            }).then((loggedInUser) => {
+                localStorage.setItem('token', loggedInUser.data.token)
+                this.$store.dispatch('user', loggedInUser)
+                this.$router.push('/dashboard')
+                this.error = loggedInUser.data.message
+                this.error = 'Invalid username/password '
+            }).catch((error) => {
+                if (error.response.status == 401){
+                    this.error = error.response.data.message
+                }
+            });
         }
     }
 };
 </script>
-
-<style lang="scss" scoped></style>
