@@ -87,6 +87,7 @@ export default {
                 password: this.password,
             }).then((loggedInUser) => {
                 localStorage.setItem('token', loggedInUser.data.token)
+                localStorage.setItem('isAuthenticated', true)
                 this.$store.dispatch('user', loggedInUser)
                 this.$router.push('/dashboard')
                 this.error = loggedInUser.data.message
